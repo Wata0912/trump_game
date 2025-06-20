@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TrumpGame
 {
@@ -16,7 +17,12 @@ namespace TrumpGame
             string num;
             //文字列から数字への変換判定
             bool result;
+            //継続判定
+            int next = 0;
+            string Next;
 
+            while(true)
+            {
                 //カード入力処理
                 for (int i = 0; i < cards.Length; i++)
                 {
@@ -38,47 +44,76 @@ namespace TrumpGame
 
                 }
 
-            //ペアの数
-            int count = 0;
-            //比較元の設定
-            for (int j = 0; j < 4; j++)
-            {
-                //比較先の設定、残り枚数分繰り返す
-                for (int i = j + 1; i < 4; i++)
+                //ペアの数
+                int count = 0;
+                //比較元の設定
+                for (int j = 0; j < 4; j++)
                 {
-                    //比較元と比較先の値が等しいときCountを+する
-                    if ((cards[i] & 0xf) == (cards[j] & 0xf))
+                    //比較先の設定、残り枚数分繰り返す
+                    for (int i = j + 1; i < 4; i++)
                     {
-                        //ペアの数をカウントする
-                        count++;
+                        //比較元と比較先の値が等しいときCountを+する
+                        if ((cards[i] & 0xf) == (cards[j] & 0xf))
+                        {
+                            //ペアの数をカウントする
+                            count++;
+                        }
+
                     }
-
                 }
-            }
 
-            //役の判定と出力
-            switch (count)
-            {
-                case 0:
-                    Console.WriteLine("ハイカード");
+                //役の判定と出力
+                switch (count)
+                {
+                    case 0:
+                        Console.WriteLine("ハイカード");
+                        break;
+                    case 1:
+                        Console.WriteLine("ワンペア!");
+                        break;
+                    case 2:
+                        Console.WriteLine("ツーペア!!");
+                        break;
+                    case 3:
+                        Console.WriteLine("スリーカード!!!");
+                        break;
+                    case 6:
+                        Console.WriteLine("フォーカード!!!!");
+                        break;
+                }
+
+                while (true)
+                {
+                    Console.Write("続けますか？ YES:1 NO:0＞");
+                    Next = Console.ReadLine();
+                    result = int.TryParse(Next, out next);
+                    if (result == true)
+                    {
+                        if (next == 1)
+                        {
+                            Console.WriteLine("継続!");
+                            break;
+                        }
+                        else if (next == 0)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("再入力してください");
+                        }
+                    }
+                }
+
+                if (next == 0)
+                {
                     break;
-                case 1:
-                    Console.WriteLine("ワンペア!");
-                    break;
-                case 2:
-                    Console.WriteLine("ツーペア!!");
-                    break;
-                case 3:
-                    Console.WriteLine("スリーカード!!!");
-                    break;
-                case 6:
-                    Console.WriteLine("フォーカード!!!!");
-                    break;
+                }
             }
 
             Console.WriteLine("Enterを押してください");
             Console.ReadLine();
-            
+
         }
     }
 }
